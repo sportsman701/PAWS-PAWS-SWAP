@@ -1,0 +1,247 @@
+body {
+  background-image: url(https://bscgems.com/shared/mars-back.jpg);
+  background-size: cover;
+  background-position: 50%;
+  font-family: "Baloo Tammudu 2";
+  line-height: 1.6;
+  padding: 10px 0 30px;
+  background-attachment: fixed;
+}
+
+a {
+  color: #beabff;
+  text-decoration: none;
+  FONT-WEIGHT: 500;
+}
+
+img.logo {
+  max-width: 166px;
+  margin-left: 20px;
+}
+
+a.pink-text {
+  color: #f15f8d;
+  text-align: center;
+  display: inline-block;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.how-many {
+  text-align: center;
+}
+
+.how-many p {
+  font-weight: 400 !important;
+}
+
+p.description.ended {
+  color: #ff2f00;
+  font-weight: bold;
+}
+
+button, .button {
+  font-weight: 700;
+  background: #1fc7d4;
+  padding: 15px 23px;
+  color: #fff;
+  font-size: 14px;
+  border: none;
+  border-radius: 5px;
+  margin-bottom: 25px;
+  cursor: pointer;
+  display: inline-block;
+}
+
+button:hover, .button:hover {
+  background: rgb(34 189 202);
+}
+
+.funding-box {
+  padding: 30px;
+  margin: 10px auto;
+  max-width: 700px;
+  background: rgb(0 0 0 / 60%);
+  border-radius: 10px;
+  position: relative;
+  color: white;
+}
+
+.first-box {
+  background: transparent;
+  color: white;
+  margin-top: 40px;
+}
+
+.first-box h3 {
+  color: rgb(239 124 161);
+}
+
+.funding-box p {
+  font-weight: bold;
+}
+
+img.boge-flag {
+  width: 100px;
+  vertical-align: middle;
+    display: inline-block;
+}
+
+.right-header {
+  display: inline-block;
+  width: 70%;
+  vertical-align: middle;
+  text-align: center;
+  padding: 0px 5%;
+}
+
+img.token-logo {
+  display: block;
+  margin: 0 auto 20px auto;
+}
+
+.right-header h3 {
+  margin-bottom: 0px;
+}
+
+.right-header p {
+  font-weight: 400;
+}
+
+.right-header a {
+  color: #ffffff;
+  text-decoration: underline;
+  font-weight: normal;
+  font-size: 13px;
+}
+
+
+
+p.audited {
+  margin-top: 0;
+  color: #e6e6e6ba;
+  position: absolute;
+  right: 11px;
+  bottom: 2px;
+  margin-bottom: 0px;
+  font-size: 13px;
+}
+
+p.audited a {
+  color: #e6e6e6ba;
+  font-weight: 400;
+  text-decoration: underline;
+  
+}
+
+span.raised {
+  color: rgb(55 191 202);
+}
+
+.token-name {
+  text-align: center;
+  color: #20d3aa;
+}
+
+img.token-logo {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+}
+
+.input-collection-box {
+  border: 1px solid black;
+  padding: 30px;
+  margin: 10px auto;
+  max-width: 500px;
+}
+
+.input-collection{
+  margin: 5px;
+}
+.funding-box p.description {
+  font-weight: 400;
+}
+
+.text-right{
+  text-align: right;
+}
+
+.warning-box {
+  color: red;
+}
+
+.info-box {
+  color: green;
+}
+
+.funding-box td{
+  padding: 5px;
+  margin: 10px auto;
+}
+.funding-box td:nth-child(2){
+    padding: 5px;
+    margin: 10px auto;
+    padding-left: 25px;
+}
+
+.time-left-until-end {
+  color: orangered;
+}
+
+.time-left-to-start {
+  color: orangered;
+}
+
+table {
+  width: 100%;
+}
+
+table td {
+  width: 50%;
+}
+
+table tr {
+  border-bottom: 1px solid #ccc;
+}
+
+.main-btn{
+  font-size: large;
+  margin: 5px;
+  color: red;
+}
+
+
+.claim {
+  text-align: center;
+  margin-top: 30px;
+}
+
+.claim p {
+  font-weight: 500 !important;
+}
+
+input.contribute-amount {
+  height: 26px;
+  margin-right: 10px;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+@media(max-width: 650px){
+  .right-header {
+    display: inline-block;
+    width: 100%;
+    vertical-align: middle;
+    text-align: center;
+    padding: 0;
+  }
+  img.boge-flag {
+    width: 100px;
+    display: block;
+    margin: 0 auto;
+ }
+}
