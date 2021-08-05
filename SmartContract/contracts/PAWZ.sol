@@ -143,8 +143,6 @@ library Address {
 
 contract Ownable is Context {
     address private _owner;
-    address private _previousOwner;
-    uint256 private _lockTime;
 
     event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
 
@@ -154,15 +152,15 @@ contract Ownable is Context {
         emit OwnershipTransferred(address(0), msgSender);
     }
 
-    function owner() public view returns (address) {
+    function owner() public view virtual returns (address) {
         return _owner;
-    }   
-    
+    }
+
     modifier onlyOwner() {
-        require(_owner == _msgSender(), "Ownable: caller is not the owner");
+        require(owner() == _msgSender(), "Ownable: caller is not the owner");
         _;
     }
-    
+
     function renounceOwnership() public virtual onlyOwner {
         emit OwnershipTransferred(_owner, address(0));
         _owner = address(0);
@@ -173,33 +171,11 @@ contract Ownable is Context {
         emit OwnershipTransferred(_owner, newOwner);
         _owner = newOwner;
     }
-
-    function getUnlockTime() public view returns (uint256) {
-        return _lockTime;
-    }
-    
-    function getTime() public view returns (uint256) {
-        return block.timestamp;
-    }
-
-    function lock(uint256 time) public virtual onlyOwner {
-        _previousOwner = _owner;
-        _owner = address(0);
-        _lockTime = block.timestamp + time;
-        emit OwnershipTransferred(_owner, address(0));
-    }
-    
-    function unlock() public virtual {
-        require(_previousOwner == msg.sender, "You don't have permission to unlock");
-        require(block.timestamp > _lockTime , "Contract is locked until 7 days");
-        emit OwnershipTransferred(_owner, _previousOwner);
-        _owner = _previousOwner;
-    }
 }
 
 // pragma solidity >=0.5.0;
 
-interface IUniswapV2Factory {
+interface IPancakeswapV2Factory {
     event PairCreated(address indexed token0, address indexed token1, address pair, uint);
 
     function feeTo() external view returns (address);
@@ -218,7 +194,7 @@ interface IUniswapV2Factory {
 
 // pragma solidity >=0.5.0;
 
-interface IUniswapV2Pair {
+interface IPancakeswapV2Pair {
     event Approval(address indexed owner, address indexed spender, uint value);
     event Transfer(address indexed from, address indexed to, uint value);
 
@@ -269,7 +245,7 @@ interface IUniswapV2Pair {
 
 // pragma solidity >=0.6.2;
 
-interface IUniswapV2Router01 {
+interface IPancakeswapV2Router01 {
     function factory() external pure returns (address);
     function WETH() external pure returns (address);
 
@@ -367,7 +343,7 @@ interface IUniswapV2Router01 {
 
 // pragma solidity >=0.6.2;
 
-interface IUniswapV2Router02 is IUniswapV2Router01 {
+interface IPancakeswapV2Router02 is IPancakeswapV2Router01 {
     function removeLiquidityETHSupportingFeeOnTransferTokens(
         address token,
         uint liquidity,
@@ -428,33 +404,33 @@ contract PAWZToken is Context, IERC20, Ownable {
     address[] private _excluded;
    
     uint256 private constant MAX = ~uint256(0);
-    uint256 private _tTotal = 100 * 10**6 * 10**6;
+    uint256 private constant _tTotal = 100 * 10**6 * 10**6;
     uint256 private _rTotal = (MAX - (MAX % _tTotal));
     uint256 private _tFeeTotal;
 
-    string private _name = "PAWZ";
-    string private _symbol = "PAWZ";
-    uint8 private _decimals = 6;
+    string private constant _name = "PAWZ";
+    string private constant _symbol = "PAWZ";
+    uint8 private constant _decimals = 6;
 
 
     uint256 public _taxFee = 3;
     uint256 private _previousTaxFee = _taxFee;
     uint256 public _taxFeeForNormal = 3;
     uint256 public _taxFeeForSell = 8;
-
-    uint256 public _liquidityFee = 12;
-    uint256 private _previousLiquidityFee = _liquidityFee;
     
     uint256 public charityDivisor = 3;
     uint256 public buyBackDivisor = 3;
     uint256 public marketingDivisor = 3;
     uint256 public LPDivisor = 3;
+
+    uint256 public _liquidityFee = charityDivisor + marketingDivisor + buyBackDivisor + LPDivisor;
+    uint256 private _previousLiquidityFee = _liquidityFee;
     
     uint256 public _maxTxAmount = 3 * 10**5 * 10**6;
     uint256 private minimumTokensBeforeSwap = 2 * 10**4 * 10**6; 
     
-    IUniswapV2Router02 public immutable uniswapV2Router;
-    address public immutable uniswapV2Pair;
+    IPancakeswapV2Router02 public immutable PancakeswapV2Router;
+    address public immutable PancakeswapV2Pair;
     
     bool inSwapAndLiquify;
     bool public swapAndLiquifyEnabled = true;
@@ -464,9 +440,9 @@ contract PAWZToken is Context, IERC20, Ownable {
     event RewardLiquidityProviders(uint256 tokenAmount);
     event BuyBackEnabledUpdated(bool enabled);
     event SwapAndLiquifyEnabledUpdated(bool enabled);
-    event SwapAndLiquify(uint256 tokensSwapped,uint256 ethReceived,uint256 tokensIntoLiqudity);
-    event SwapETHForTokens(uint256 amountIn,address[] path);
-    event SwapTokensForETH(uint256 amountIn,address[] path);
+    event SwapAndLiquify(uint256 tokensSwapped,uint256 ethReceived,uint256 tokensIntoLiquidity);
+    event SwapBNBForTokens(uint256 amountIn,address[] path);
+    event SwapTokensForBNB(uint256 amountIn,address[] path);
     
     modifier lockTheSwap {
         inSwapAndLiquify = true;
@@ -477,11 +453,11 @@ contract PAWZToken is Context, IERC20, Ownable {
     constructor () {
         _rOwned[_msgSender()] = _rTotal;
         
-        IUniswapV2Router02 _uniswapV2Router = IUniswapV2Router02(0x10ED43C718714eb63d5aA57B78B54704E256024E); //MainNET Router
-        // IUniswapV2Router02 _uniswapV2Router = IUniswapV2Router02(0xBeD1633949Be8997B17cBFd3D418dB5EaA8FA55A); //TestNET Router
-        uniswapV2Pair = IUniswapV2Factory(_uniswapV2Router.factory()).createPair(address(this), _uniswapV2Router.WETH());
+        IPancakeswapV2Router02 _PancakeswapV2Router = IPancakeswapV2Router02(0x10ED43C718714eb63d5aA57B78B54704E256024E); //MainNET Router
+        // IPancakeswapV2Router02 _PancakeswapV2Router = IPancakeswapV2Router02(0xBeD1633949Be8997B17cBFd3D418dB5EaA8FA55A); //TestNET Router
+        PancakeswapV2Pair = IPancakeswapV2Factory(_PancakeswapV2Router.factory()).createPair(address(this), _PancakeswapV2Router.WETH());
 
-        uniswapV2Router = _uniswapV2Router;
+        PancakeswapV2Router = _PancakeswapV2Router;
         
         _isExcludedFromFee[owner()] = true;
         _isExcludedFromFee[address(this)] = true;
@@ -489,19 +465,19 @@ contract PAWZToken is Context, IERC20, Ownable {
         emit Transfer(address(0), _msgSender(), _tTotal);
     }
 
-    function name() public view returns (string memory) {
+    function name() public pure returns (string memory) {
         return _name;
     }
 
-    function symbol() public view returns (string memory) {
+    function symbol() public pure returns (string memory) {
         return _symbol;
     }
 
-    function decimals() public view returns (uint8) {
+    function decimals() public pure returns (uint8) {
         return _decimals;
     }
 
-    function totalSupply() public view override returns (uint256) {
+    function totalSupply() public pure override returns (uint256) {
         return _tTotal;
     }
 
@@ -624,13 +600,13 @@ contract PAWZToken is Context, IERC20, Ownable {
         uint256 contractTokenBalance = balanceOf(address(this));
         bool overMinimumTokenBalance = contractTokenBalance >= minimumTokensBeforeSwap;
         
-        if (to == uniswapV2Pair){
+        if (to == PancakeswapV2Pair){
             _taxFee = _taxFeeForSell;
         } else {
             _taxFee = _taxFeeForNormal;
         }
 
-        if (!inSwapAndLiquify && swapAndLiquifyEnabled && to == uniswapV2Pair) {
+        if (!inSwapAndLiquify && swapAndLiquifyEnabled) {
             if (overMinimumTokenBalance) {
                 contractTokenBalance = minimumTokensBeforeSwap;
                 swapTokens(contractTokenBalance);                
@@ -648,35 +624,35 @@ contract PAWZToken is Context, IERC20, Ownable {
     }
 
     function swapTokens(uint256 contractTokenBalance) private lockTheSwap {
-        uint256 tokenAmountForLP = contractTokenBalance.div(_liquidityFee).mul(LPDivisor).div(2);
+        uint256 tokenAmountForLP = contractTokenBalance.mul(LPDivisor).div(_liquidityFee).div(2);
         uint256 initialBalance = address(this).balance;
-        swapTokensForEth(contractTokenBalance.sub(tokenAmountForLP));
+        swapTokensForBNB(contractTokenBalance.sub(tokenAmountForLP));
         uint256 transferredBalance = address(this).balance.sub(initialBalance);
 
         //Send to Charity address
-        transferToAddressETH(charityAddress, transferredBalance.div(_liquidityFee.mul(2).sub(LPDivisor)).mul(charityDivisor.mul(2)).div(2));
+        transferToAddressBNB(charityAddress, transferredBalance.mul(charityDivisor.mul(2)).div(_liquidityFee.mul(2).sub(LPDivisor)));
         //Send to Marketing address
-        transferToAddressETH(marketingAddress, transferredBalance.div(_liquidityFee.mul(2).sub(LPDivisor)).mul(marketingDivisor.mul(2)).div(2));
+        transferToAddressBNB(marketingAddress, transferredBalance.mul(marketingDivisor.mul(2)).div(_liquidityFee.mul(2).sub(LPDivisor)));
         //Send to BuyBack address
-        transferToAddressETH(buybackAddress, transferredBalance.div(_liquidityFee.mul(2).sub(LPDivisor)).mul(buyBackDivisor.mul(2)).div(2));
+        transferToAddressBNB(buybackAddress, transferredBalance.mul(buyBackDivisor.mul(2)).div(_liquidityFee.mul(2).sub(LPDivisor)));
 
-        uint256 ETHAmountForLP = transferredBalance.div(_liquidityFee.mul(2).sub(LPDivisor)).mul(LPDivisor).div(2);
+        uint256 BNBAmountForLP = transferredBalance.mul(LPDivisor).div(_liquidityFee.mul(2).sub(LPDivisor));
 
         if (LPEnabled == true){
-            addLiquidity(tokenAmountForLP, ETHAmountForLP);
+            addLiquidity(tokenAmountForLP, BNBAmountForLP);
         }
     }
     
-    function swapTokensForEth(uint256 tokenAmount) private {
-        // generate the uniswap pair path of token -> weth
+    function swapTokensForBNB(uint256 tokenAmount) private {
+        // generate the Pancakeswap pair path of token -> weth
         address[] memory path = new address[](2);
         path[0] = address(this);
-        path[1] = uniswapV2Router.WETH();
+        path[1] = PancakeswapV2Router.WETH();
 
-        _approve(address(this), address(uniswapV2Router), tokenAmount);
+        _approve(address(this), address(PancakeswapV2Router), tokenAmount);
 
         // make the swap
-        uniswapV2Router.swapExactTokensForETHSupportingFeeOnTransferTokens(
+        PancakeswapV2Router.swapExactTokensForETHSupportingFeeOnTransferTokens(
             tokenAmount,
             0, // accept any amount of ETH
             path,
@@ -684,37 +660,37 @@ contract PAWZToken is Context, IERC20, Ownable {
             block.timestamp
         );
         
-        emit SwapTokensForETH(tokenAmount, path);
+        emit SwapTokensForBNB(tokenAmount, path);
     }
     
-    function swapETHForTokens(uint256 amount) private {
-        // generate the uniswap pair path of token -> weth
+    function swapBNBForTokens(uint256 amount) private {
+        // generate the Pancakeswap pair path of token -> weth
         address[] memory path = new address[](2);
-        path[0] = uniswapV2Router.WETH();
+        path[0] = PancakeswapV2Router.WETH();
         path[1] = address(this);
 
       // make the swap
-        uniswapV2Router.swapExactETHForTokensSupportingFeeOnTransferTokens{value: amount}(
+        PancakeswapV2Router.swapExactETHForTokensSupportingFeeOnTransferTokens{value: amount}(
             0, // accept any amount of Tokens
             path,
             deadAddress, // Burn address
             block.timestamp.add(300)
         );
         
-        emit SwapETHForTokens(amount, path);
+        emit SwapBNBForTokens(amount, path);
     }
     
     function addLiquidity(uint256 tokenAmount, uint256 ethAmount) private {
         // approve token transfer to cover all possible scenarios
-        _approve(address(this), address(uniswapV2Router), tokenAmount);
+        _approve(address(this), address(PancakeswapV2Router), tokenAmount);
 
         // add the liquidity
-        uniswapV2Router.addLiquidityETH{value: ethAmount}(
+        PancakeswapV2Router.addLiquidityETH{value: ethAmount}(
             address(this),
             tokenAmount,
             0, // slippage is unavoidable
             0, // slippage is unavoidable
-            owner(),
+            address(this), // Fix for PAW-01
             block.timestamp
         );
     }
@@ -927,14 +903,14 @@ contract PAWZToken is Context, IERC20, Ownable {
     function afterPreSale() external onlyOwner {
         setSwapAndLiquifyEnabled(true);
         _taxFee = _taxFeeForNormal;
-        _liquidityFee = 12;
+        _liquidityFee = charityDivisor + marketingDivisor + buyBackDivisor + LPDivisor;
         _maxTxAmount = 3 * 10**5 * 10**6;
     }
     
-    function transferToAddressETH(address payable recipient, uint256 amount) private {
+    function transferToAddressBNB(address payable recipient, uint256 amount) private {
         recipient.transfer(amount);
     }
     
-     //to recieve ETH from uniswapV2Router when swaping
+     //to recieve ETH from PancakeswapV2Router when swaping
     receive() external payable {}
 }
