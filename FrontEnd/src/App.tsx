@@ -8,6 +8,7 @@ import { ethers } from 'ethers';
 import { claimPAWZ, depositePAWS, getPAWSAmount, getPAWSDepositeAmount, getPAWSTotalDepositeAmount, getPAWZAmount, isClaimEnabled } from 'utils/contracts';
 import toast, { Toaster } from 'react-hot-toast';
 import moment from 'moment';
+import { getContractInfo } from 'utils';
 
 function App() {
   useEagerConnect();
@@ -87,6 +88,10 @@ function App() {
     }
   }
 
+  const SWAPContractAddress = getContractInfo("SWAP_LaunchPad").address;
+  const PAWSTokenAddress = getContractInfo("PAWS_Token").address;
+  const PAWZTokenAddress = getContractInfo("PAWZ_Token").address;
+
   return (
     <>
       <Toaster position="top-center" toastOptions={{ success: { duration: 4000 }, error: { duration: 4000 } }} />
@@ -123,11 +128,11 @@ function App() {
             $PAWZ is a next generation of $PAWS, community-focused, decentralized cryptocurrency with instant rewards thanks to active users! Join the moon mission.
           </p>
 
-          <p className="text-center"><a className="pink-text" href="https://bscscan.com/address/0x64501C32FAF32C19aFAf724E2edd132B8fa6288b" target="_blank">View Smart Contract</a></p>
+          <p className="text-center"><a className="pink-text" href={`https://bscscan.com/address/${SWAPContractAddress}`} target="_blank">View Smart Contract</a></p>
 
           <p>Total Raised: <span className="raised">{PAWSDepositeTotalAmount} PAWS</span></p>
           <p>My Contribution: <span className="raised">{PAWSDepositeAmount} PAWS</span></p>
-          <p>PAWZ Token : <a href="https://bscscan.com/token/0xd92aacC1c84E6A4aDa48Bb2648598B30aDF1d1Bd" target="_blank">0xd92aacC1c84E6A4aDa48Bb2648598B30aDF1d1Bd</a></p>
+          <p>PAWZ Token : <a href={`https://bscscan.com/token/${PAWZTokenAddress}`} target="_blank">{PAWZTokenAddress}</a></p>
 
           <div className="claim">
             <p className="description">Deposite your PAWS tokens</p>

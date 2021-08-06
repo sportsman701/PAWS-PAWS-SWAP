@@ -13,15 +13,15 @@ export const Networks = {
 export const CONTRACTS_BY_NETWORK = {
   [Networks.MainNet]: {
     SWAP_LaunchPad: {
-      address: '0x64501C32FAF32C19aFAf724E2edd132B8fa6288b',
+      address: '0x172ea525AACdBBA138D2a9aD949899239575c477',
       abi: SWAP_LaunchPadABI,
     },
     PAWS_Token: {
-      address: '0x066fc8DD5955534A01a9f892314c9B01b59A9C11',
+      address: '0x06870D62802eB649ff1fC6f431AAE569C9fE201A',
       abi: PAWS_TokenABI,
     },
     PAWZ_Token: {
-      address: '0xd92aacC1c84E6A4aDa48Bb2648598B30aDF1d1Bd',
+      address: '0xd51CE9DC2115b18B77dACED9213425946D5b716a',
       abi: PAWZ_TokenABI,
     }
   },

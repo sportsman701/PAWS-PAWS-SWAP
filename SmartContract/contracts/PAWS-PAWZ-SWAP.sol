@@ -181,7 +181,7 @@ contract PAWS_PAWZ_SWAP_LaunchPad is Ownable {
         require(_Mapping_PAWS_Deposite[_msgSender()] > 0, "PAWS Deposite Amount is empty.");
 
         uint256 PAWS_Deposite_Amount = _Mapping_PAWS_Deposite[_msgSender()];
-        uint256 PAWZ_Claim_Amount = PAWS_Deposite_Amount.div(10**6).mul((uint256)(_PAWZ_Contract.decimals())).div((uint256)(_PAWS_Contract.decimals()));
+        uint256 PAWZ_Claim_Amount = PAWS_Deposite_Amount.div(10**6).mul(10**(uint256)(_PAWZ_Contract.decimals())).div(10**(uint256)(_PAWS_Contract.decimals()));
         _PAWZ_Contract.transfer(_msgSender(), PAWZ_Claim_Amount);
         _Mapping_PAWS_Deposite[_msgSender()] = 0;
     }

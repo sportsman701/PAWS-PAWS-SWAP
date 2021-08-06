@@ -92,7 +92,7 @@
             {
                 "indexed": false,
                 "internalType": "uint256",
-                "name": "tokensIntoLiqudity",
+                "name": "tokensIntoLiquidity",
                 "type": "uint256"
             }
         ],
@@ -128,7 +128,7 @@
                 "type": "address[]"
             }
         ],
-        "name": "SwapETHForTokens",
+        "name": "SwapBNBForTokens",
         "type": "event"
     },
     {
@@ -147,7 +147,7 @@
                 "type": "address[]"
             }
         ],
-        "name": "SwapTokensForETH",
+        "name": "SwapTokensForBNB",
         "type": "event"
     },
     {
@@ -196,6 +196,32 @@
                 "internalType": "bool",
                 "name": "",
                 "type": "bool"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "PancakeswapV2Pair",
+        "outputs": [
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "PancakeswapV2Router",
+        "outputs": [
+            {
+                "internalType": "contract IPancakeswapV2Router02",
+                "name": "",
+                "type": "address"
             }
         ],
         "stateMutability": "view",
@@ -415,7 +441,7 @@
                 "type": "uint8"
             }
         ],
-        "stateMutability": "view",
+        "stateMutability": "pure",
         "type": "function"
     },
     {
@@ -479,32 +505,6 @@
         "name": "excludeFromReward",
         "outputs": [],
         "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "getTime",
-        "outputs": [
-            {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "getUnlockTime",
-        "outputs": [
-            {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-            }
-        ],
-        "stateMutability": "view",
         "type": "function"
     },
     {
@@ -596,19 +596,6 @@
         "type": "function"
     },
     {
-        "inputs": [
-            {
-                "internalType": "uint256",
-                "name": "time",
-                "type": "uint256"
-            }
-        ],
-        "name": "lock",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
         "inputs": [],
         "name": "marketingAddress",
         "outputs": [
@@ -657,7 +644,7 @@
                 "type": "string"
             }
         ],
-        "stateMutability": "view",
+        "stateMutability": "pure",
         "type": "function"
     },
     {
@@ -895,7 +882,7 @@
                 "type": "string"
             }
         ],
-        "stateMutability": "view",
+        "stateMutability": "pure",
         "type": "function"
     },
     {
@@ -940,7 +927,7 @@
                 "type": "uint256"
             }
         ],
-        "stateMutability": "view",
+        "stateMutability": "pure",
         "type": "function"
     },
     {
@@ -1005,39 +992,6 @@
             }
         ],
         "name": "transferOwnership",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "uniswapV2Pair",
-        "outputs": [
-            {
-                "internalType": "address",
-                "name": "",
-                "type": "address"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "uniswapV2Router",
-        "outputs": [
-            {
-                "internalType": "contract IUniswapV2Router02",
-                "name": "",
-                "type": "address"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "unlock",
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
