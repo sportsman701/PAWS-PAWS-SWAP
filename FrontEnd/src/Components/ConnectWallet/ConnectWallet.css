@@ -1,0 +1,97 @@
+.connect-drop-down {
+  width: 300px;
+  height: fit-content;
+  background-color: white;
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin-top: 20px;
+  z-index: 1000;
+  border-radius: 25px;
+}
+
+.connect-wallet {
+  position: absolute;
+  right: 20px;
+  top: 20px;
+}
+.connct-wallet-btn {
+  background-color: rgb(209, 78, 78);
+  height: 50px;
+  font-family: sans-serif;
+  display: flex;
+  line-height: 0 !important;
+  align-items: center !important;
+  margin: 0;
+  transition: all 0.2s;
+  /* padding: 5px 10px !important; */
+}
+.drop-header {
+  display: flex;
+  border-bottom: 1px solid rgba(177, 177, 177, 0.445);
+  justify-content: space-between;
+  padding: 20px 30px;
+  align-items: center;
+  font-family: "Baloo Tammudu 2";
+  background-color: rgba(206, 243, 253, 0.616);
+  border-top-right-radius: 25px;
+  border-top-left-radius: 25px;
+}
+.drop-header svg {
+  fill: #1fc7d4;
+  width: 10px !important;
+}
+.drop-header svg:hover {
+  cursor: pointer;
+}
+.drop-header span {
+  color: rgb(72, 30, 112);
+  font-weight: 700;
+  font-size: 17px;
+}
+.drop-footer span {
+  color: rgb(138, 97, 170);
+  font-weight: 500;
+  font-size: 15px;
+}
+.drop-footer {
+  border-top: 1px solid rgba(177, 177, 177, 0.445);
+  display: flex;
+  padding-top: 15px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.how-to-connect {
+  width: 80%;
+  height: 40px;
+  border-radius: 15px;
+  background-color: rgb(138, 97, 170);
+  font-family: sans-serif;
+  padding: 0;
+}
+.different-wallets {
+  display: flex;
+  padding: 10px 20px;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  align-items: center;
+}
+.different-wallets span {
+  font-size: 14px;
+}
+.different-wallets div {
+  margin-bottom: 2vh;
+  display: flex;
+  color: rgb(138, 97, 170);
+  align-items: center;
+  flex-direction: column;
+  width: 100px;
+}
+.different-wallets div img {
+  width: 35px;
+  object-fit: cover;
+  height: 35px;
+  margin-bottom: 2vh;
+}
