@@ -3,12 +3,15 @@ import ConnectDropDown from "./ConnectDropDown";
 import "./ConnectWallet.css";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import Modal from "@material-ui/core/Modal";
+import { truncateWalletString } from "utils";
 
 interface IProp {
   handleOpen?: any;
   handleClose?: any;
   open?: any;
   setOpen?: any;
+  isLoggedin?: boolean;
+  walletAddress?: any;
 }
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -31,6 +34,8 @@ const ConnectWallet: React.FC<IProp> = ({
   open,
   setOpen,
   handleClose,
+  isLoggedin,
+  walletAddress,
 }) => {
   const classes = useStyles();
   const openDrop = () => {
@@ -40,7 +45,9 @@ const ConnectWallet: React.FC<IProp> = ({
   return (
     <div className="connect-wallet">
       <button onClick={openDrop} className="connct-wallet-btn">
-        Connect Wallet
+        {
+          isLoggedin ? truncateWalletString(walletAddress) : "Connect Wallet"
+        }
       </button>
       <Modal
         className={classes.modal}

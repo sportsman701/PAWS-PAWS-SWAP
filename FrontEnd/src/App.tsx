@@ -128,6 +128,8 @@ function App() {
         handleClose={handleClose}
         open={open}
         setOpen={setOpen}
+        isLoggedin={loginStatus}
+        walletAddress={account}
       />
       {/* <img className="logo" src="https://uploads-ssl.webflow.com/60cd35da0768833e006845d3/60cfdc34d0238c4e35424d09_white-bsc-logo.png"></img> */}
       <div className="funding-box first-box">
