@@ -21,7 +21,7 @@ export const CONTRACTS_BY_NETWORK = {
       abi: PAWS_TokenABI,
     },
     PAWZ_Token: {
-      address: '0xcB5f9B3f12aef688416d1405DfF0E45B591fA6bc',
+      address: '0xa54A5e77B126B0E920AF521133e0FF3E735B6Fa0',
       abi: PAWZ_TokenABI,
     }
   },
